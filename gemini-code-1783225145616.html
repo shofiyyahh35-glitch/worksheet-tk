@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembelajaran Interaktif: Drag and Drop</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .instructions {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .game-container {
+            display: flex;
+            gap: 50px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+            justify-content: space-around;
+        }
+
+        /* Draggable Words Section */
+        .words-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 40%;
+        }
+
+        .draggable {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: grab;
+            user-select: none;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .draggable:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+        
+        .draggable.hidden {
+            display: none;
+        }
+
+        /* Drop Zones Section */
+        .drop-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 50%;
+        }
+
+        .drop-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px dashed #ccc;
+        }
+
+        .icon {
+            font-size: 40px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .drop-zone {
+            flex-grow: 1;
+            height: 50px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .drop-zone.over {
+            background-color: #d1ecf1;
+            border: 2px dashed #17a2b8;
+        }
+
+        .drop-zone.correct {
+            background-color: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+
+        .category-title {
+            text-align: center;
+            width: 100%;
+            margin-bottom: 20px;
+            color: #555;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .reset-btn {
+            margin-top: 30px;
+            padding: 10px 25px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .reset-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Permainan Mencocokkan Kata (Interactive Matching)</h1>
+    <div class="instructions">
+        <p><strong>Cara Bermain:</strong> Tarik (Drag) kata di sebelah kiri dan letakkan (Drop) ke dalam kotak kosong di sebelah kanan yang sesuai dengan gambarnya.</p>
+    </div>
+
+    <div class="game-container">
+        <!-- Kata-kata yang bisa ditarik -->
+        <div class="words-section" id="wordsList">
+            <h3 class="category-title">Tarik Kata Ini</h3>
+            <div class="draggable" draggable="true" data-id="monkey">monkey</div>
+            <div class="draggable" draggable="true" data-id="red">red</div>
+            <div class="draggable" draggable="true" data-id="bag">a bag</div>
+            <div class="draggable" draggable="true" data-id="cat">cat</div>
+            <div class="draggable" draggable="true" data-id="book">a book</div>
+            <div class="draggable" draggable="true" data-id="blue">blue</div>
+            <div class="draggable" draggable="true" data-id="elephant">elephant</div>
+        </div>
+
+        <!-- Area Tujuan (Drop Zone) beserta Icon/Gambar -->
+        <div class="drop-section">
+            <h3 class="category-title">Letakkan di Sini</h3>
+            
+            <!-- School Items -->
+            <div class="drop-item">
+                <div class="icon">🎒</div>
+                <div class="drop-zone" data-target="bag">?</div>
+            </div>
+            <div class="drop-item">
+                <div class="icon">📚</div>
+                <div class="drop-zone" data-target="book">?</div>
+            </div>
+
+            <!-- Animals -->
+            <div class="drop-item">
+                <div class="icon">🐒</div>
+                <div class="drop-zone" data-target="monkey">?</div>
+            </div>
+            <div class="drop-item">
+                <div class="icon">🐱</div>
+                <div class="drop-zone" data-target="cat">?</div>
+            </div>
+            <div class="drop-item">
+                <div class="icon">🐘</div>
+                <div class="drop-zone" data-target="elephant">?</div>
+            </div>
+
+            <!-- Colors -->
+            <div class="drop-item">
+                <div class="icon">🔴</div>
+                <div class="drop-zone" data-target="red">?</div>
+            </div>
+            <div class="drop-item">
+                <div class="icon">🔵</div>
+                <div class="drop-zone" data-target="blue">?</div>
+            </div>
+        </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetGame()">Ulangi Permainan</button>
+
+    <script>
+        const draggables = document.querySelectorAll('.draggable');
+        const dropZones = document.querySelectorAll('.drop-zone');
+
+        // Tambahkan Event Listener untuk setiap elemen yang bisa di-drag
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+                // Simpan data ID dari kata yang sedang ditarik
+                event.dataTransfer.setData('text/plain', draggable.dataset.id);
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+            });
+        });
+
+        // Tambahkan Event Listener untuk area drop
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Diperlukan agar elemen bisa di-drop
+                if (!zone.classList.contains('correct')) {
+                    zone.classList.add('over');
+                }
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('over');
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('over');
+
+                // Jika sudah terisi benar, abaikan
+                if (zone.classList.contains('correct')) return;
+
+                const draggedId = e.dataTransfer.getData('text/plain');
+                const targetId = zone.dataset.target;
+
+                // Cek apakah ID kata cocok dengan Target Area
+                if (draggedId === targetId) {
+                    const draggedElement = document.querySelector(`.draggable[data-id="${draggedId}"]`);
+                    
+                    // Pindahkan teks dan ubah tampilan jadi sukses
+                    zone.textContent = draggedElement.textContent;
+                    zone.classList.add('correct');
+                    
+                    // Sembunyikan tombol kata yang asli
+                    draggedElement.classList.add('hidden');
+                    
+                    checkWin();
+                } else {
+                    // Animasi salah (opsional, guncangan)
+                    zone.style.backgroundColor = "#f8d7da";
+                    zone.textContent = "❌ Salah!";
+                    setTimeout(() => {
+                        zone.style.backgroundColor = "#e9ecef";
+                        zone.textContent = "?";
+                    }, 800);
+                }
+            });
+        });
+
+        function checkWin() {
+            const allCorrect = Array.from(dropZones).every(zone => zone.classList.contains('correct'));
+            if (allCorrect) {
+                setTimeout(() => {
+                    alert('🎉 Selamat! Anda berhasil mencocokkan semuanya!');
+                }, 300);
+            }
+        }
+
+        function resetGame() {
+            // Kembalikan drop zones
+            dropZones.forEach(zone => {
+                zone.classList.remove('correct');
+                zone.textContent = "?";
+                zone.style.backgroundColor = "";
+            });
+
+            // Munculkan kembali kata-kata
+            draggables.forEach(draggable => {
+                draggable.classList.remove('hidden');
+            });
+        }
+    </script>
+</body>
+</html>
